@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Draggable from "react-draggable";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -8,10 +8,10 @@ import pluralize from "pluralize";
 
 const WireFrameMaker = () => {
   const [databaseName, setDatabaseName] = useState("");
-  const [relationshipType, setRelationshipType] = useState("");
-  const [relatedTable, setRelatedTable] = useState("");
-  const [throughTable, setThroughTable] = useState("");
-  const [newAttributeInput, setNewAttributeInput] = useState("");
+  // const [relationshipType, setRelationshipType] = useState("");
+  // const [relatedTable, setRelatedTable] = useState("");
+  // const [throughTable, setThroughTable] = useState("");
+  // const [newAttributeInput, setNewAttributeInput] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [tables, setTables] = useState([
@@ -24,7 +24,29 @@ const WireFrameMaker = () => {
       relationshipType: "",
       relatedTable: "",
       throughTable: "",
-    },
+      model_meta: {
+        columns: [],
+        relationships: [],
+        join_table: [],
+      },
+      crud_meta: {
+        get: {
+          get_single_return_attributes: [],
+          get_all_return_attributes: [],
+          one_to_many_get_all_related_table: [],
+        },
+        post: {
+          post_data_attributes: [],
+          join_table_logic: [],
+        },
+        put: {
+          put_data_attributes: [],
+          join_table_logic: [],
+        },
+      },
+      model_code: "",
+      crud_method_code: "",
+    }
   ]);
 
   useEffect(() => {
@@ -71,7 +93,7 @@ const WireFrameMaker = () => {
     localStorage.setItem("zoomLevel", zoomLevel);
   }, [zoomLevel]);
 
-  const initialTablesRef = useRef([]);
+  // const initialTablesRef = useRef([]);
 
   const handleDrag = (id, draggableData) => {
     const { x, y } = draggableData;
@@ -92,25 +114,47 @@ const WireFrameMaker = () => {
       relationshipType: "",
       relatedTable: "",
       throughTable: "",
+      model_meta: {
+        columns: [],
+        relationships: [],
+        join_table: [],
+      },
+      crud_meta: {
+        get: {
+          get_single_return_attributes: [],
+          get_all_return_attributes: [],
+          one_to_many_get_all_related_table: [],
+        },
+        post: {
+          post_data_attributes: [],
+          join_table_logic: [],
+        },
+        put: {
+          put_data_attributes: [],
+          join_table_logic: [],
+        },
+      },
+      model_code: "",
+      crud_method_code: "",
     };
     setTables((prevTables) => [...prevTables, newTable]);
   };
 
-  const updateTableData = () => {
-    const updatedTables = tables.map((table) => {
-      return {
-        id: table.id,
-        title: table.title.toLowerCase(),
-        attributes: table.attributes.map((attribute) => ({
-          name: attribute.name.toLowerCase(),
-          type: attribute.type.toLowerCase(),
-        })),
-        relationships: table.relationships.map((relationship) => relationship),
-        position: table.position,
-      };
-    });
-    setTables(updatedTables);
-  };
+  // const updateTableData = () => {
+  //   const updatedTables = tables.map((table) => {
+  //     return {
+  //       id: table.id,
+  //       title: table.title.toLowerCase(),
+  //       attributes: table.attributes.map((attribute) => ({
+  //         name: attribute.name.toLowerCase(),
+  //         type: attribute.type.toLowerCase(),
+  //       })),
+  //       relationships: table.relationships.map((relationship) => relationship),
+  //       position: table.position,
+  //     };
+  //   });
+  //   setTables(updatedTables);
+  // };
 
   const generateAPI = async () => {
     const apiData = {
@@ -135,25 +179,13 @@ const WireFrameMaker = () => {
     openModal();
   };
 
-  // const logTables = () => {
-  //   const data = {
-  //     "database-name": databaseName,
-  //     tables: tables.map((table) => {
-  //       return {
-  //         id: table.id,
-  //         title: table.title,
-  //         attributes: table.attributes.map((attribute) => {
-  //           return {
-  //             name: attribute.name,
-  //             type: attribute.type,
-  //           };
-  //         }),
-  //         relationships: table.relationships,
-  //       };
-  //     }),
-  //   };
-  //   console.log(JSON.stringify(data, null, 2));
-  // };
+  const logTables = () => {
+    const data = {
+      "database-name": databaseName,
+      "tables": tables
+    };
+    console.log(JSON.stringify(data, null, 2));
+  };
 
   const handleAttributeChange = (tableId, attributeIndex, newValue) => {
     setTables((prevTables) =>
@@ -273,7 +305,9 @@ const WireFrameMaker = () => {
             const relatedTablePluralized = pluralize.plural(table.relatedTable);
             relationshipString = `One ${table.title} to Many ${relatedTablePluralized}`;
           } else {
-            const relatedTableSingularized = pluralize.singular(table.relatedTable);
+            const relatedTableSingularized = pluralize.singular(
+              table.relatedTable
+            );
             relationshipString = `One ${table.title} to One ${relatedTableSingularized}`;
           }
 
@@ -324,10 +358,9 @@ const WireFrameMaker = () => {
 
   const renderTableRelationships = (relationships, tableId) => {
     return relationships.map((relationship, index) => {
-
       return (
         <li key={index}>
-            {relationship}
+          {relationship}
           <h4
             className="delete-button"
             onClick={() => handleDeleteRelationship(tableId, index)}
@@ -425,7 +458,7 @@ const WireFrameMaker = () => {
         <button onClick={generateAPI} className="generate-api-button">
           Generate API
         </button>
-        {/* <button onClick={logTables}>Log Tables</button> */}
+        <button onClick={logTables}>Log Tables</button>
       </div>
       <div
         className="wireframe-container"
