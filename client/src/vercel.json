@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "routes": [
+      { "src": "^/wireframe-maker$", "dest": "/index.html" },
+      { "src": "^/how-to-use$", "dest": "/index.html" },
+      { "src": "^/$", "dest": "/index.html" },
+      { "src": "(.*)", "dest": "/index.html" }
+    ]
+  }
+  

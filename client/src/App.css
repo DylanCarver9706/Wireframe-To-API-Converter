@@ -1,0 +1,387 @@
+/* Style for the main container */
+.content-container {
+  margin-top: 69px; /* Adjust the value to match the actual height of your navbar */
+}
+
+.table {
+  border-radius: 8px;
+  padding: 8px; /* Adjusted padding to make it more compact */
+  height: 365px;
+  position: absolute;
+  background-color: #f5f5f5;
+  width: fit-content;
+  height: fit-content;
+  margin-top: 50px;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  margin: 20px;
+}
+
+/* Style for the input field within .table */
+.table input[type="text"],
+.table select {
+  padding: 8px; /* Set the same height for inputs and selects */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: auto;
+  margin-bottom: 4px;
+}
+
+/* Style for the h3 elements within .table */
+.table h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+/* Style for the ul element within .table */
+.table ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Style for the li elements within .table */
+.table li {
+  margin-top: 4px;
+  /* margin-bottom: 4px; */
+  position: relative;
+}
+
+/* Style for the button elements within .table */
+.table button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 8px; /* Adjusted margin to make it more compact */
+  
+}
+
+/* Change button background on hover */
+.table button:hover {
+  background-color: #0056b3;
+}
+
+/* Style for the div elements within .table */
+.table div {
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 12px; /* Adjusted padding to make it more compact */
+  margin-top: 8px; /* Adjusted margin to make it more compact */
+
+  /* New styles for the border and rounded edges */
+  border: 2px solid #000000;
+  border-radius: 8px;
+}
+
+/* Style for the .table p element */
+.table p {
+  font-style: italic;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+.header {
+  position: fixed;
+  top: 69px; /* Adjust the value to match the actual height of your navbar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: 2px solid #000000;
+  width: 100%; /* Add this to ensure the header spans the full width */
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+.input-field {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+  margin-right: 12px;
+}
+
+.add-table-button{
+  padding: 8px 16px;
+  background-color: #0056b3;
+  color: #fff;
+  border: 2px solid #000000;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.generate-api-button {
+  padding: 8px 16px;
+  background-color: #0056b3;
+  border: 2px solid #000000;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.add-table-button:hover,
+.generate-api-button:hover {
+  background-color: #003d80;
+}
+
+.how-to-use-container {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  color: black;
+  margin-top: 69px;
+}
+
+.how-to-use-container h2 {
+  margin-top: 0;
+  color: black;
+  font-size: 25px;
+}
+
+.how-to-intro {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  max-width: 80%;
+  margin: 0 auto;
+  border: 2px solid #000000;
+  padding: 10px;
+  font-size: 16px;
+}
+
+/* .how-to-use-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+
+@media (max-width: 768px) {
+  .how-to-use-container {
+    grid-template-columns: 1fr;
+  }
+} */
+
+/* .how-to-use-container ol {
+  padding-left: 20px;
+} */
+
+.instruction {
+  margin-bottom: 10px;
+  border: 2px solid #000000;
+  padding: 10px; /* Add padding to the border */
+  font-size: 20px;
+}
+
+.how-to-instructions h2 {
+  color: black;
+}
+
+.faq-item {
+  margin-bottom: 20px;
+  border: 2px solid #000000;
+  padding: 10px; /* Add padding to the border */
+  font-size: 20px;
+}
+
+.faq-item strong {
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* .zoom-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.zoom-buttons button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.zoom-buttons button:hover {
+  background-color: #0056b3;
+} */
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  backdrop-filter: blur(5px); /* Add the blur effect to the background */
+  z-index: 9999; /* Adjust the z-index value as needed */
+}
+
+.modal-content {
+  position: relative;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 20px;
+  height: 300px;
+  width: 400px;
+  /* max-width: 400px; */
+  /* height: fit-content; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+
+  /* Add some spacing between the elements */
+  margin: 20px;
+}
+
+.modal-content h3 {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.close-button {
+  background-color: #c52222;;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+
+  /* Position the button at the bottom right */
+  position: absolute;
+  bottom: 20px; /* Add some padding to the bottom */
+  right: 20px; /* Add some padding to the right */
+}
+
+.close-button:hover {
+  background-color: #ff0000;;
+}
+
+.donate-buttons img {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.donate-buttons button {
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #007bff; /* Blue color, you can change it to your desired color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.donate-buttons button a {
+  color: white; /* Set the text color to white for anchor tags inside buttons */
+  text-decoration: none;
+}
+
+.donate-buttons button:hover {
+  background-color: #0056b3; /* Darker shade of the blue color on hover */
+  color: white;
+}
+
+.wireframe-container {
+  position: relative;
+}
+
+.zoom-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.zoom-buttons button {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.zoom-buttons button.zoom-in::before {
+  content: "+";
+  font-size: 50px;
+}
+
+.zoom-buttons button.zoom-out::before {
+  content: "—";
+  font-size: 30px;
+}
+
+.delete-button {
+  display: inline-block;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  color: gray;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  position: relative;
+  top: 2px;
+}
+
+.delete-button:hover {
+  color: red;
+}
+
+.delete-button-table {
+  background-color: transparent;
+  border: none;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  /* Position the delete button at the top right corner */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.delete-button-table:hover {
+  color: red;
+}
