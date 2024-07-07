@@ -6,6 +6,10 @@ import Modal from "./Modal";
 import pluralize from "pluralize";
 // import Xarrow from "react-xarrows";
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 const WireFrameMaker = () => {
   const [databaseName, setDatabaseName] = useState("");
   // const [relationshipType, setRelationshipType] = useState("");
@@ -19,6 +23,7 @@ const WireFrameMaker = () => {
       id: 1,
       title: "",
       attributes: [],
+      relationshipStrings: [],
       relationships: [],
       position: { x: 10, y: 75 },
       relationshipType: "",
@@ -46,7 +51,7 @@ const WireFrameMaker = () => {
       },
       model_code: "",
       crud_method_code: "",
-    }
+    },
   ]);
 
   useEffect(() => {
@@ -109,6 +114,7 @@ const WireFrameMaker = () => {
       id: tables.length + 1,
       title: "",
       attributes: [],
+      relationshipStrings: [],
       relationships: [],
       position: { x: 10, y: tables.length * 15 + 75 },
       relationshipType: "",
@@ -140,22 +146,6 @@ const WireFrameMaker = () => {
     setTables((prevTables) => [...prevTables, newTable]);
   };
 
-  // const updateTableData = () => {
-  //   const updatedTables = tables.map((table) => {
-  //     return {
-  //       id: table.id,
-  //       title: table.title.toLowerCase(),
-  //       attributes: table.attributes.map((attribute) => ({
-  //         name: attribute.name.toLowerCase(),
-  //         type: attribute.type.toLowerCase(),
-  //       })),
-  //       relationships: table.relationships.map((relationship) => relationship),
-  //       position: table.position,
-  //     };
-  //   });
-  //   setTables(updatedTables);
-  // };
-
   const generateAPI = async () => {
     const apiData = {
       "database-name": databaseName,
@@ -182,7 +172,7 @@ const WireFrameMaker = () => {
   const logTables = () => {
     const data = {
       "database-name": databaseName,
-      "tables": tables
+      tables: tables,
     };
     console.log(JSON.stringify(data, null, 2));
   };
@@ -222,7 +212,7 @@ const WireFrameMaker = () => {
   };
 
   const handleTitleChange = (tableId, event) => {
-    const newTitle = event.target.value;
+    const newTitle = capitalizeFirstLetter(event.target.value);
     setTables((prevTables) =>
       prevTables.map((table) =>
         table.id === tableId ? { ...table, title: newTitle } : table
@@ -297,23 +287,41 @@ const WireFrameMaker = () => {
           table.relationshipType.trim() !== ""
         ) {
           let relationshipString;
+          let relationshipObject = {
+            type: "",
+            related_table: "",
+          };
 
           if (table.relationshipType === "many-to-many") {
             const relatedTablePluralized = pluralize.plural(table.relatedTable);
             relationshipString = `Many ${table.title} to Many ${relatedTablePluralized}`;
+            relationshipObject.type = "many-to-many"
+            relationshipObject.related_table = table.relatedTable
           } else if (table.relationshipType === "one-to-many") {
             const relatedTablePluralized = pluralize.plural(table.relatedTable);
             relationshipString = `One ${table.title} to Many ${relatedTablePluralized}`;
+            relationshipObject.type = "one-to-many"
+            relationshipObject.related_table = table.relatedTable
           } else {
             const relatedTableSingularized = pluralize.singular(
               table.relatedTable
             );
             relationshipString = `One ${table.title} to One ${relatedTableSingularized}`;
+            relationshipObject.type = "one-to-one"
+            // NOTE: Add primary and secondary logic
+            relationshipObject.related_table = table.relatedTable
           }
 
           return {
             ...table,
-            relationships: [...table.relationships, relationshipString],
+            relationshipStrings: [
+              ...table.relationshipStrings,
+              relationshipString,
+            ],
+            relationships: [
+              ...table.relationships,
+              relationshipObject,
+            ],
             relationshipType: "",
             relatedTable: "",
             throughTable: "",
@@ -356,8 +364,8 @@ const WireFrameMaker = () => {
     ));
   };
 
-  const renderTableRelationships = (relationships, tableId) => {
-    return relationships.map((relationship, index) => {
+  const renderTableRelationships = (relationshipStrings, tableId) => {
+    return relationshipStrings.map((relationship, index) => {
       return (
         <li key={index}>
           {relationship}
@@ -401,8 +409,9 @@ const WireFrameMaker = () => {
         table.id === tableId
           ? {
               ...table,
-              relationships: table.relationships.filter(
+              relationshipStrings: table.relationshipStrings.filter(
                 (_, index) => index !== relationshipIndex
+                // NOTE: Also delete relationship meta
               ),
             }
           : table
@@ -476,7 +485,7 @@ const WireFrameMaker = () => {
                   http://localhost:3000/&nbsp;
                   <input
                     type="text"
-                    value={table.title}
+                    value={table.title.toLowerCase()}
                     placeholder="Table Title"
                     onChange={(event) => handleTitleChange(table.id, event)}
                   />
@@ -521,10 +530,13 @@ const WireFrameMaker = () => {
                   Add Attribute
                 </button>
                 <h3>Relationships</h3>
-                {table.relationships.length > 0 && (
+                {table.relationshipStrings.length > 0 && (
                   <ul>
                     <h3>
-                      {renderTableRelationships(table.relationships, table.id)}
+                      {renderTableRelationships(
+                        table.relationshipStrings,
+                        table.id
+                      )}
                     </h3>
                   </ul>
                 )}
