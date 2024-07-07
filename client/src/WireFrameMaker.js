@@ -260,27 +260,21 @@ const WireFrameMaker = () => {
     setTables((prevTables) =>
       prevTables.map((table) => {
         if (table.id !== tableId) return table;
-
         if (
           table.relatedTable.trim() !== "" &&
-          table.relationshipType.trim() !== "" &&
-          (table.relationshipType !== "has_many_through" ||
-            table.throughTable.trim() !== "")
+          table.relationshipType.trim() !== ""
         ) {
           let relationshipString;
 
-          if (table.relationshipType === "has_many_through") {
+          if (table.relationshipType === "many-to-many") {
             const relatedTablePluralized = pluralize.plural(table.relatedTable);
-            const throughTablePluralized = pluralize.plural(table.throughTable);
-            relationshipString = `has_many :${relatedTablePluralized}, through: :${throughTablePluralized}`;
-          } else if (table.relationshipType === "has_many") {
+            relationshipString = `Many ${table.title} to Many ${relatedTablePluralized}`;
+          } else if (table.relationshipType === "one-to-many") {
             const relatedTablePluralized = pluralize.plural(table.relatedTable);
-            relationshipString = `has_many :${relatedTablePluralized}`;
+            relationshipString = `One ${table.title} to Many ${relatedTablePluralized}`;
           } else {
-            const relatedTableSingularized = pluralize.singular(
-              table.relatedTable
-            );
-            relationshipString = `belongs_to :${relatedTableSingularized}`;
+            const relatedTableSingularized = pluralize.singular(table.relatedTable);
+            relationshipString = `One ${table.title} to One ${relatedTableSingularized}`;
           }
 
           return {
@@ -330,16 +324,10 @@ const WireFrameMaker = () => {
 
   const renderTableRelationships = (relationships, tableId) => {
     return relationships.map((relationship, index) => {
-      const type = relationship.split(":")[0].trim();
-      const relatedTable = relationship.split(":")[1].split(",")[0].trim();
-      const throughMatch = relationship.match(/through: :(\w+)/);
-      const throughTable = throughMatch ? throughMatch[1] : null;
 
       return (
         <li key={index}>
-          {throughTable
-            ? `${type} :${relatedTable}, through: :${throughTable}`
-            : `${type} :${relatedTable}`}
+            {relationship}
           <h4
             className="delete-button"
             onClick={() => handleDeleteRelationship(tableId, index)}
@@ -514,9 +502,9 @@ const WireFrameMaker = () => {
                   }
                 >
                   <option value="">Select Relationship Type</option>
-                  <option value="belongs_to">Belongs_To</option>
-                  <option value="has_many">Has_Many</option>
-                  <option value="has_many_through">Has_Many, Through:</option>
+                  <option value="one-to-one">One to One</option>
+                  <option value="one-to-many">One to Many</option>
+                  <option value="many-to-many">Many to Many</option>
                 </select>
                 &nbsp;
                 <br />
