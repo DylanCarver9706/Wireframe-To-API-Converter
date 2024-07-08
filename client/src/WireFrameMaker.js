@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Draggable from "react-draggable";
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
 import Modal from "./Modal";
 import pluralize from "pluralize";
 // import Xarrow from "react-xarrows";
@@ -9,6 +7,49 @@ import pluralize from "pluralize";
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+const transformTables = (input) => {
+  const output = { tables: {} };
+
+  input.forEach((table) => {
+    const tableName = pluralize.singular(table.title); // Remove the trailing 's' from the title for singular form
+    const transformedTable = {
+      columns: table.attributes.map((attr) => ({
+        name: attr.name,
+        type: attr.type,
+      })),
+      relationships: table.relationships.map((rel) => ({
+        type: rel.type,
+        related_table: pluralize.singular(rel.related_table), // Remove the trailing 's' from the related table name
+      })),
+      model_meta: {
+        columns: [],
+        relationships: [],
+        join_table: [],
+      },
+      crud_meta: {
+        get: {
+          get_single_return_attributes: [],
+          get_all_return_attributes: [],
+          one_to_many_get_all_related_table: [],
+        },
+        post: {
+          post_data_attributes: [],
+          join_table_logic: [],
+        },
+        put: {
+          put_data_attributes: [],
+          join_table_logic: [],
+        },
+      },
+      model_code: "",
+      crud_method_code: "",
+    };
+    output.tables[tableName] = transformedTable;
+  });
+  // console.log(JSON.stringify(output.tables, null, 2))
+  return output.tables;
+};
 
 const WireFrameMaker = () => {
   const [databaseName, setDatabaseName] = useState("");
@@ -147,25 +188,33 @@ const WireFrameMaker = () => {
   };
 
   const generateAPI = async () => {
-    const apiData = {
-      "database-name": databaseName,
-      tables: tables,
-    };
-
-    const tablesBlob = new Blob([JSON.stringify(apiData, null, 2)], {
-      type: "application/json",
-    });
-
-    const zip = new JSZip();
-    zip.file("tables.txt", tablesBlob);
-
-    const response = await fetch("/rails_api_script.exe");
-    const exeBlob = await response.blob();
-    zip.file("rails_api_script.exe", exeBlob);
-
-    const zipBlob = await zip.generateAsync({ type: "blob" });
-
-    saveAs(zipBlob, "rails-api.zip");
+    let requestBody = {"app_name": databaseName, "tables": transformTables(tables)}
+    // console.log(JSON.stringify(requestBody, null, 2));
+    fetch("http://dylancarver14.pythonanywhere.com/process", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        console.log(response);
+        return response.blob();
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = `${databaseName}.py`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => console.error("Error:", error));
     openModal();
   };
 
@@ -267,7 +316,7 @@ const WireFrameMaker = () => {
                     table.newAttribute && table.newAttribute.trim() !== "" // Check if newAttribute exists and is not an empty string
                       ? table.newAttribute.trim()
                       : "",
-                  type: table.selectedType && table.selectedType.toLowerCase(), // Check if selectedType exists before converting to lowercase
+                  type: table.selectedType, // Check if selectedType exists before converting to lowercase
                 },
               ],
               newAttribute: "",
@@ -293,23 +342,18 @@ const WireFrameMaker = () => {
           };
 
           if (table.relationshipType === "many-to-many") {
-            const relatedTablePluralized = pluralize.plural(table.relatedTable);
-            relationshipString = `Many ${table.title} to Many ${relatedTablePluralized}`;
-            relationshipObject.type = "many-to-many"
-            relationshipObject.related_table = table.relatedTable
+            relationshipString = `Many ${pluralize.plural(table.title)} to Many ${pluralize.plural(table.relatedTable)}`;
+            relationshipObject.type = "many-to-many";
+            relationshipObject.related_table = table.relatedTable;
           } else if (table.relationshipType === "one-to-many") {
-            const relatedTablePluralized = pluralize.plural(table.relatedTable);
-            relationshipString = `One ${table.title} to Many ${relatedTablePluralized}`;
-            relationshipObject.type = "one-to-many"
-            relationshipObject.related_table = table.relatedTable
+            relationshipString = `One ${pluralize.singular(table.title)} to Many ${pluralize.plural(table.relatedTable)}`;
+            relationshipObject.type = "one-to-many";
+            relationshipObject.related_table = table.relatedTable;
           } else {
-            const relatedTableSingularized = pluralize.singular(
-              table.relatedTable
-            );
-            relationshipString = `One ${table.title} to One ${relatedTableSingularized}`;
-            relationshipObject.type = "one-to-one"
+            relationshipString = `One ${pluralize.singular(table.title)} to One ${pluralize.singular(table.relatedTable)}`;
+            relationshipObject.type = "one-to-one";
             // NOTE: Add primary and secondary logic
-            relationshipObject.related_table = table.relatedTable
+            relationshipObject.related_table = table.relatedTable;
           }
 
           return {
@@ -318,10 +362,7 @@ const WireFrameMaker = () => {
               ...table.relationshipStrings,
               relationshipString,
             ],
-            relationships: [
-              ...table.relationships,
-              relationshipObject,
-            ],
+            relationships: [...table.relationships, relationshipObject],
             relationshipType: "",
             relatedTable: "",
             throughTable: "",
@@ -348,10 +389,10 @@ const WireFrameMaker = () => {
           onChange={(e) => handleTypeChange(tableId, index, e.target.value)}
         >
           <option value="data type">Data Type</option>
-          <option value="integer">Integer</option>
-          <option value="boolean">Boolean</option>
-          <option value="float">Float</option>
-          <option value="string">String</option>
+          <option value="Integer">Integer</option>
+          <option value="Boolean">Boolean</option>
+          <option value="Float">Float</option>
+          <option value="String(100)">String</option>
         </select>
         &nbsp;
         <h4
@@ -482,7 +523,6 @@ const WireFrameMaker = () => {
             >
               <div className="table" id={table.id}>
                 <h3>
-                  http://localhost:3000/&nbsp;
                   <input
                     type="text"
                     value={table.title.toLowerCase()}
@@ -523,7 +563,7 @@ const WireFrameMaker = () => {
                   <option value="Integer">Integer</option>
                   <option value="Boolean">Boolean</option>
                   <option value="Float">Float</option>
-                  <option value="String">String</option>
+                  <option value="String(100)">String</option>
                 </select>
                 &nbsp;
                 <button onClick={() => handleAddAttribute(table.id)}>
