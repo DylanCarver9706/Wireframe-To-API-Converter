@@ -188,8 +188,7 @@ const WireFrameMaker = () => {
   };
 
   const generateAPI = async () => {
-    let requestBody = {"app_name": databaseName, "tables": transformTables(tables)}
-    // console.log(JSON.stringify(requestBody, null, 2));
+    let requestBody = {app_name: databaseName, tables: transformTables(tables)}
     fetch("http://dylancarver14.pythonanywhere.com/process", {
       method: "POST",
       headers: {
@@ -220,8 +219,8 @@ const WireFrameMaker = () => {
 
   const logTables = () => {
     const data = {
-      "database-name": databaseName,
-      tables: tables,
+      app_name: databaseName,
+      tables: transformTables(tables),
     };
     console.log(JSON.stringify(data, null, 2));
   };
@@ -331,10 +330,7 @@ const WireFrameMaker = () => {
     setTables((prevTables) =>
       prevTables.map((table) => {
         if (table.id !== tableId) return table;
-        if (
-          table.relatedTable.trim() !== "" &&
-          table.relationshipType.trim() !== ""
-        ) {
+        if (table.relatedTable.trim() !== "" && table.relationshipType.trim() !== "") {
           let relationshipString;
           let relationshipObject = {
             type: "",
@@ -349,10 +345,9 @@ const WireFrameMaker = () => {
             relationshipString = `One ${pluralize.singular(table.title)} to Many ${pluralize.plural(table.relatedTable)}`;
             relationshipObject.type = "one-to-many";
             relationshipObject.related_table = table.relatedTable;
-          } else {
+          } else if (table.relationshipType === "one-to-one") {
             relationshipString = `One ${pluralize.singular(table.title)} to One ${pluralize.singular(table.relatedTable)}`;
             relationshipObject.type = "one-to-one";
-            // NOTE: Add primary and secondary logic
             relationshipObject.related_table = table.relatedTable;
           }
 
