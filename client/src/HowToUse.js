@@ -11,17 +11,16 @@ const HowToUse = () => {
           <p>
             Wireframe to API Converter is a user-friendly web application that
             allows you to convert backend database wireframes into RESTful API
-            structures effortlessly and kick-start your next project ASAP.
+            structures effortlessly to kick-start your next project ASAP
           </p>
           <br />
           <p>
-            Wireframe to API Converter is intended to provide RESTful API
-            endpoints for app development with basic CRUD methods tailored to
-            your database to get you started faster. The generated API
-            structures are made from Ruby on Rails methods and can be used as a
-            starting point for your backend development. Please note that the
-            database used is MySQL. Follow the steps below to effectively use
-            the application.
+            It is intended to provide RESTful API
+            endpoints with basic CRUD methods tailored to
+            your app to get you started faster. The generated API
+            structures are made from Python Flask and can be used as a
+            starting point for your backend development. Follow the steps below to effectively use
+            the application
           </p>
         </div>
         <br />
@@ -29,86 +28,76 @@ const HowToUse = () => {
         <br />
         <div className="instruction">
           <strong>Start Your Wireframe:</strong> Go to "Wireframe Maker" at the
-          top to start creating the wireframe for your backend database.
+          top to start creating the wireframe for your backend database
         </div>
         <div className="instruction">
           <strong>Name Your Database:</strong> At the top there will be a header
-          that says 'Database Name'. This will be the name of your database and
-          ultimately your ruby project when you generate the tables into an APi.{" "}
-          {/* <strong>
-            For database naming conventions, please do no have any spaces,
-            capital letters, or special characters
-          </strong>{" "} */}
-          {/* when naming the database. This will prevent the API from being
-          generated later. Some examples or database names are
-          'restaurant-database' or 'my-new-ruby-api' */}
+          that says 'Database Name'. This will be the name of your Flask app when you generate the tables into an API.{" "}
         </div>
         <div className="instruction">
-          <strong>Create Your Endpoints/Tables:</strong> In the tables on the app, you will see
-          'http://localhost:3000/Table Title'. In the input field, enter the
-          name of the table. These will be the names of your endpoints when the API is created.
-          {/* <strong>Be sure not to pluralize the table names </strong>
-          as the Ruby methods will take care of that and it can cause issues for
-          join tables later. */}
+          <strong>Create Your Tables:</strong> Create tables by clicking the "Add Tables" button. In the tables on the app, 
+          you will see the "Table Title". In the input field, enter the name of the table in singular form. This means 
+          instead of entering "Users", enter "User" instead. These will be the names of your endpoints when the API is created, 
+          but the app will pluralize them to follow RESTful conventions. <br /><br />NOTE: Join tables do not need to be created 
+          as they will be created during API generation.
         </div>
         <div className="instruction">
           <strong>Add Attributes:</strong> The attributes
           are the columns for your database table. Do not pluralize these names.
           It won't affect anything, it just looks wrong. There is no need to
-          specify "id" as an attribute as this is taken care of with Ruby
-          methods, but be sure to add your ids into your join table to follow
-          Ruby conventions.
+          specify "id" as an attribute as this is taken care of during the API generation.
+          You also do not need to specify associated items that would render in the response.
+          For example, if a Store has many Items in a One to Many relationship, you do not need 
+          to specify "items" in the Store table or "store_id" in the Items table
         </div>
         <div className="instruction">
           <strong>Establish Relationships:</strong> To create
           relationships/associations between tables, select the appropriate
-          relationship type from the dropdown and choose the related table. For
-          "has_many_through" relationships, specify the through table as well.
+          relationship type from the dropdown and choose the related table. 
           Click on the "Add Relationship" button to add the relationship to the
-          table. Follow this guide to find the appropriate relationship for your
-          table:&nbsp;
-          <a
-            href="https://guides.rubyonrails.org/association_basics.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Ruby on Rails Association Basics Guide
-          </a>
+          table
         </div>
         <div className="instruction">
           <strong>Create a New Table:</strong> When you are ready to expand your
           database, click on the "Add Table" button in the navigation bar to
-          create a new table.
+          create a new table. 
         </div>
         <div className="instruction">
           <strong>Drag and Reposition Tables:</strong> You can easily drag and
           reposition the tables on the screen using your mouse with React DnD
           (Drag and Drop). This feature allows you to organize your wireframes
-          any way you'd like.
+          any way you'd like
         </div>
         <div className="instruction">
           <strong>Generate API:</strong> Once you've defined the attributes and
           relationships of your database, click on the "Generate API" button in
-          the header bar. The application will create an API based on the
-          wireframe and download a custom script to get it running.
+          the header bar. The application will create a Flask app based on the
+          wireframe and download a .py file you can run
         </div>
         <div className="instruction">
-          <strong>Run the Script:</strong> Now you can run the Python script
-          provided in the download folder to create your custom Ruby on Rails
-          project with enpoints ready to go!
+          <strong>Run the Script:</strong> Now you can run the Python file using Python 3.0+
+           to create your project with endpoints ready to go!
         </div>
       </div>
       <br />
       <h2>How to Run the API:</h2>
       <br />
+      <div className="instruction">
+          {/* Handle requirements.txt */}
+          <strong>Python Version:</strong> The program will not check if 
+          Python is installed on your machine. If version 3.0 or higher is not installed, please download it from {" "}
+          <a
+            href="https://www.python.org/downloads/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Python's Official Website
+          </a>
+        </div>
       <div className="how-to-run-api">
         <div className="instruction">
-          <strong>Unpack:</strong> Once the file is downloaded, unzip and move
+          <strong>Unpack:</strong> Once the file is downloaded, move
           the folder to where you want the project to live in your directory
-        </div>
-        <div className="instruction">
-          <strong>Run:</strong> Run the .exe file in the download folder to run
-          the custom Python script built just for your database
         </div>
         <div className="instruction">
           <strong>Protection:</strong> If you encounter any warnings from
@@ -116,24 +105,13 @@ const HowToUse = () => {
           promise this is not a virus 😉
         </div>
         <div className="instruction">
-          <strong>Ruby Version:</strong> The program will check if your version
-          of ruby is installed by checking{" "}
-          <a
-            href="https://rubyinstaller.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            rubyinstaller.org
-          </a>
-          . If version 3.0 or higher is installed, the script will continue
-          building your API, if it isn't, the latest version will be downloaded
-          and installed for you. Follow the prompts on the installer and the
-          script until it is downloaded
+          <strong>Run:</strong> Run the .py file in the to run
+          the custom Flask app built just for your database. The command should be as simple as "python file-name.py"
         </div>
+        
         <div className="instruction">
-          <strong>Success:</strong> The API will then be generated and a port
+          <strong>Success:</strong> The API will start and a port
           will be open to allow you to access those endpoints you created
-          earlier, immediately!
         </div>
         <div className="instruction">
           <strong>Test Endponts:</strong> Test your endpoints. I recommend&nbsp;
@@ -147,7 +125,7 @@ const HowToUse = () => {
           &nbsp;for this
         </div>
         <div className="instruction">
-          <strong>Done:</strong> Now your API is live and running and ready for
+          <strong>Done:</strong> Now your API running and ready for
           you to create that next billion dollar idea. Just don't forget who
           saved you tons of time building your app when you are on your yacht!
         </div>
@@ -159,28 +137,14 @@ const HowToUse = () => {
           <br />
           <div className="faq-item">
             <strong>
-              Q: What happens if I close the script window while the port is
-              running?
-            </strong>
-            <p>
-              A: No worries! If you close the script window while the port is
-              running, you can easily restart the API. Head to the location
-              where saved the download to and find your ruby project folder,
-              navigate to the project directory, and navigate to the /app
-              sub-directory. In your terminal for that directory, run 'rails s'
-              to start the API on the same port again.
-            </p>
-          </div>
-          <div className="faq-item">
-            <strong>
               Q: Are there any other languages or frameworks supported other
-              than Ruby on Rails?
+              than Python Flask?
             </strong>
             <p>
               A: Great question! Currently, the app is focused on providing
-              features specifically for Ruby on Rails. However, our long-term
+              features specifically for Python Flask. However, our long-term
               vision includes expanding support for other languages and
-              frameworks in the future.
+              frameworks.
             </p>
           </div>
           <div className="faq-item">
@@ -196,57 +160,19 @@ const HowToUse = () => {
           </div>
           <div className="faq-item">
             <strong>
-              Q: What if I encounter errors while running the custom Python
-              script for the API?
+              Q: What if I encounter errors while generating the API?
             </strong>
             <p>
-              A: If you encounter any issues or errors while running the custom
-              Python script, first double-check the installation of required
-              dependencies like Ruby. If you are prompted to install the latest
-              version of Ruby, you will have to restart the script to create
-              your API. Also, ensure that you follow proper naming conventions
-              for Ruby on Rails applications as this could cause the script to
-              fail. If you still face problems, you can reach out to the
-              application's support team by going to the "About the Author" tab
-              at the top.
+              A: If you encounter any issues while generating the API, ensure that 
+              you follow proper naming conventions for Python Flask applications as 
+              this could cause the generation to fail. If you still face problems, 
+              you can reach out to the application's support team by going to the 
+              "About the Author" tab at the top.
             </p>
           </div>
           <div className="faq-item">
             <strong>
-              Q: Can I change the database type used by the Wireframe to API
-              Converter?
-            </strong>
-            <p>
-              A: Currently, the Wireframe to API Converter supports MySQL
-              databases, and it does not provide the option to switch to other
-              database types in the GUI. However, if you need to use a different
-              database type like PostgreSQL, you may need to manually modify the
-              generated API code after downloading to change the database type.
-            </p>
-          </div>
-          <div className="faq-item">
-            <strong>
-              Q: How do I handle complex relationships, such as many-to-many
-              relationships?
-            </strong>
-            <p>
-              A: For complex relationships like many-to-many, you can use the
-              "has_many_through" option in the relationship dropdown. Specify
-              the through table to define the relationship. You can refer to the
-              provided link to the{" "}
-              <a
-                href="https://guides.rubyonrails.org/association_basics.html"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Ruby on Rails Association Basics Guide
-              </a>{" "}
-              for more information.
-            </p>
-          </div>
-          <div className="faq-item">
-            <strong>
-              Q: Is the Wireframe to API Converter suitable for large-scale
+              Q: Is this suitable for large-scale
               applications?
             </strong>
             <p>
@@ -254,7 +180,7 @@ const HowToUse = () => {
               starting point for small to medium-scale applications. While it
               can be used as a foundation for larger projects, it may require
               further optimization and customization to handle the complexities
-              of larger datasets and high-traffic applications.
+              of larger applications.
             </p>
           </div>
           <div className="faq-item">
