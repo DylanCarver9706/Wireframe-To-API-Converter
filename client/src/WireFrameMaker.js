@@ -12,7 +12,7 @@ const transformTables = (input) => {
   const output = { tables: {} };
 
   input.forEach((table) => {
-    const tableName = pluralize.singular(table.title); // Remove the trailing 's' from the title for singular form
+    const tableName = pluralize.singular(table.title);
     const transformedTable = {
       columns: table.attributes.map((attr) => ({
         name: attr.name,
@@ -20,7 +20,7 @@ const transformTables = (input) => {
       })),
       relationships: table.relationships.map((rel) => ({
         type: rel.type,
-        related_table: pluralize.singular(rel.related_table), // Remove the trailing 's' from the related table name
+        related_table: pluralize.singular(rel.related_table),
       })),
       model_meta: {
         columns: [],
@@ -47,16 +47,11 @@ const transformTables = (input) => {
     };
     output.tables[tableName] = transformedTable;
   });
-  // console.log(JSON.stringify(output.tables, null, 2))
   return output.tables;
 };
 
 const WireFrameMaker = () => {
   const [databaseName, setDatabaseName] = useState("");
-  // const [relationshipType, setRelationshipType] = useState("");
-  // const [relatedTable, setRelatedTable] = useState("");
-  // const [throughTable, setThroughTable] = useState("");
-  // const [newAttributeInput, setNewAttributeInput] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [tables, setTables] = useState([
@@ -200,7 +195,6 @@ const WireFrameMaker = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        console.log(response);
         return response.blob();
       })
       .then((blob) => {
@@ -217,13 +211,13 @@ const WireFrameMaker = () => {
     openModal();
   };
 
-  const logTables = () => {
-    const data = {
-      app_name: databaseName,
-      tables: transformTables(tables),
-    };
-    console.log(JSON.stringify(data, null, 2));
-  };
+  // const logTables = () => {
+  //   const data = {
+  //     app_name: databaseName,
+  //     tables: transformTables(tables),
+  //   };
+  //   console.log(JSON.stringify(data, null, 2));
+  // };
 
   const handleAttributeChange = (tableId, attributeIndex, newValue) => {
     setTables((prevTables) =>
@@ -341,6 +335,7 @@ const WireFrameMaker = () => {
             relationshipString = `Many ${pluralize.plural(table.title)} to Many ${pluralize.plural(table.relatedTable)}`;
             relationshipObject.type = "many-to-many";
             relationshipObject.related_table = table.relatedTable;
+            // NOTE: Add visible join table to screen
           } else if (table.relationshipType === "one-to-many") {
             relationshipString = `One ${pluralize.singular(table.title)} to Many ${pluralize.plural(table.relatedTable)}`;
             relationshipObject.type = "one-to-many";
@@ -503,7 +498,7 @@ const WireFrameMaker = () => {
         <button onClick={generateAPI} className="generate-api-button">
           Generate API
         </button>
-        <button onClick={logTables}>Log Tables</button>
+        {/* <button onClick={logTables}>Log Tables</button> */}
       </div>
       <div
         className="wireframe-container"
@@ -517,11 +512,12 @@ const WireFrameMaker = () => {
               onStop={(e, draggableData) => handleDrag(table.id, draggableData)}
             >
               <div className="table" id={table.id}>
+                <h3>Table Name</h3>
                 <h3>
                   <input
                     type="text"
-                    value={table.title.toLowerCase()}
-                    placeholder="Table Title"
+                    value={capitalizeFirstLetter(table.title)}
+                    placeholder="Enter in Singular Form"
                     onChange={(event) => handleTitleChange(table.id, event)}
                   />
                 </h3>
