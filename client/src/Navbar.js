@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 
 const authorWebsiteURL =
-  "https://dylancarver9706.github.io/Dylan-Carver-Personal-Website/";
+  "https://dylancarver.com";
 
 function Navbar() {
   return (
@@ -83,7 +83,7 @@ function Navbar() {
                 },
               }}
             >
-              About the Author
+              About the Creator
             </Button>
           </Container>
         </div>
