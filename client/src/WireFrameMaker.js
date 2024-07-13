@@ -11,42 +11,46 @@ function capitalizeFirstLetter(string) {
 const transformTables = (input) => {
   const output = { tables: {} };
 
-  input.forEach((table) => {
-    const tableName = pluralize.singular(table.title);
-    const transformedTable = {
-      columns: table.attributes.map((attr) => ({
-        name: attr.name,
-        type: attr.type,
-      })),
-      relationships: table.relationships.map((rel) => ({
-        type: rel.type,
-        related_table: pluralize.singular(rel.related_table),
-      })),
-      model_meta: {
-        columns: [],
-        relationships: [],
-        join_table: [],
-      },
-      crud_meta: {
-        get: {
-          get_single_return_attributes: [],
-          get_all_return_attributes: [],
-          one_to_many_get_all_related_table: [],
+  input
+    .filter((table) => table.output !== false) // Filter out tables where output is false
+    .forEach((table) => {
+      const tableName = pluralize.singular(table.title);
+      const transformedTable = {
+        columns: table.attributes
+          .filter((attribute) => !attribute.ignore) // Filter out attributes with ignore set to true
+          .map((attribute) => ({
+            name: attribute.name,
+            type: attribute.type,
+          })),
+        relationships: table.relationships.map((rel) => ({
+          type: rel.type,
+          related_table: pluralize.singular(rel.related_table),
+        })),
+        model_meta: {
+          columns: [],
+          relationships: [],
+          join_table: [],
         },
-        post: {
-          post_data_attributes: [],
-          join_table_logic: [],
+        crud_meta: {
+          get: {
+            get_single_return_attributes: [],
+            get_all_return_attributes: [],
+            one_to_many_get_all_related_table: [],
+          },
+          post: {
+            post_data_attributes: [],
+            join_table_logic: [],
+          },
+          put: {
+            put_data_attributes: [],
+            join_table_logic: [],
+          },
         },
-        put: {
-          put_data_attributes: [],
-          join_table_logic: [],
-        },
-      },
-      model_code: "",
-      crud_method_code: "",
-    };
-    output.tables[tableName] = transformedTable;
-  });
+        model_code: "",
+        crud_method_code: "",
+      };
+      output.tables[tableName] = transformedTable;
+    });
   return output.tables;
 };
 
@@ -57,6 +61,7 @@ const WireFrameMaker = () => {
   const [tables, setTables] = useState([
     {
       id: 1,
+      output: true,
       title: "",
       attributes: [],
       relationshipStrings: [],
@@ -149,7 +154,62 @@ const WireFrameMaker = () => {
     const newTable = {
       id: tables.length + 1,
       title: "",
-      attributes: [],
+      attributes: [
+        {
+          ignore: true,
+          name: "id",
+          type: "Integer",
+        },
+      ],
+      relationshipStrings: [],
+      relationships: [],
+      position: { x: 10, y: tables.length * 15 + 75 },
+      relationshipType: "",
+      relatedTable: "",
+      throughTable: "",
+      model_meta: {
+        columns: [],
+        relationships: [],
+        join_table: [],
+      },
+      crud_meta: {
+        get: {
+          get_single_return_attributes: [],
+          get_all_return_attributes: [],
+          one_to_many_get_all_related_table: [],
+        },
+        post: {
+          post_data_attributes: [],
+          join_table_logic: [],
+        },
+        put: {
+          put_data_attributes: [],
+          join_table_logic: [],
+        },
+      },
+      model_code: "",
+      crud_method_code: "",
+    };
+    setTables((prevTables) => [...prevTables, newTable]);
+  };
+
+  const addJoinTable = (tableName, relatedTableName) => {
+    const newTable = {
+      id: tables.length + 1,
+      output: false,
+      title: `${tableName}_${capitalizeFirstLetter(
+        relatedTableName
+      )} Join Table`,
+      attributes: [
+        {
+          name: `${tableName}_id`,
+          type: "Integer",
+        },
+        {
+          name: `${relatedTableName}_id`,
+          type: "Integer",
+        },
+      ],
       relationshipStrings: [],
       relationships: [],
       position: { x: 10, y: tables.length * 15 + 75 },
@@ -183,7 +243,10 @@ const WireFrameMaker = () => {
   };
 
   const generateAPI = async () => {
-    let requestBody = {app_name: databaseName, tables: transformTables(tables)}
+    let requestBody = {
+      app_name: databaseName,
+      tables: transformTables(tables),
+    };
     fetch("http://dylancarver14.pythonanywhere.com/process", {
       method: "POST",
       headers: {
@@ -216,7 +279,9 @@ const WireFrameMaker = () => {
   //     app_name: databaseName,
   //     tables: transformTables(tables),
   //   };
+
   //   console.log(JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(tables, null, 2));
   // };
 
   const handleAttributeChange = (tableId, attributeIndex, newValue) => {
@@ -287,15 +352,6 @@ const WireFrameMaker = () => {
     );
   };
 
-  const handleThroughTableChange = (tableId, event) => {
-    const tableTitle = event.target.value;
-    setTables((prevTables) =>
-      prevTables.map((table) =>
-        table.id === tableId ? { ...table, throughTable: tableTitle } : table
-      )
-    );
-  };
-
   const handleAddAttribute = (tableId) => {
     setTables((prevTables) =>
       prevTables.map((table) =>
@@ -324,24 +380,42 @@ const WireFrameMaker = () => {
     setTables((prevTables) =>
       prevTables.map((table) => {
         if (table.id !== tableId) return table;
-        if (table.relatedTable.trim() !== "" && table.relationshipType.trim() !== "") {
-          let relationshipString;
+        if (
+          table.relatedTable.trim() !== "" &&
+          table.relationshipType.trim() !== ""
+        ) {
+          let relationshipStringArray = [];
           let relationshipObject = {
             type: "",
             related_table: "",
           };
 
           if (table.relationshipType === "many-to-many") {
-            relationshipString = `Many ${pluralize.plural(table.title)} to Many ${pluralize.plural(table.relatedTable)}`;
+            relationshipStringArray.push(
+              `Many ${pluralize.plural(table.title)} to Many ${pluralize.plural(
+                table.relatedTable
+              )}`
+            );
             relationshipObject.type = "many-to-many";
             relationshipObject.related_table = table.relatedTable;
-            // NOTE: Add visible join table to screen
+            addJoinTable(
+              pluralize.singular(table.title).toLowerCase(),
+              pluralize.singular(table.relatedTable).toLowerCase()
+            );
           } else if (table.relationshipType === "one-to-many") {
-            relationshipString = `One ${pluralize.singular(table.title)} to Many ${pluralize.plural(table.relatedTable)}`;
+            relationshipStringArray.push(
+              `One ${pluralize.singular(
+                table.title
+              )} to Many ${pluralize.plural(table.relatedTable)}`
+            );
             relationshipObject.type = "one-to-many";
             relationshipObject.related_table = table.relatedTable;
           } else if (table.relationshipType === "one-to-one") {
-            relationshipString = `One ${pluralize.singular(table.title)} to One ${pluralize.singular(table.relatedTable)}`;
+            relationshipStringArray.push(
+              `One ${pluralize.singular(
+                table.title
+              )} to One ${pluralize.singular(table.relatedTable)}`
+            );
             relationshipObject.type = "one-to-one";
             relationshipObject.related_table = table.relatedTable;
           }
@@ -350,7 +424,7 @@ const WireFrameMaker = () => {
             ...table,
             relationshipStrings: [
               ...table.relationshipStrings,
-              relationshipString,
+              ...relationshipStringArray,
             ],
             relationships: [...table.relationships, relationshipObject],
             relationshipType: "",
@@ -442,7 +516,9 @@ const WireFrameMaker = () => {
               ...table,
               relationshipStrings: table.relationshipStrings.filter(
                 (_, index) => index !== relationshipIndex
-                // NOTE: Also delete relationship meta
+              ),
+              relationships: table.relationships.filter(
+                (_, index) => index !== relationshipIndex
               ),
             }
           : table
@@ -601,30 +677,6 @@ const WireFrameMaker = () => {
                           </option>
                         ))}
                     </select>
-                    {table.relationshipType === "has_many_through" && (
-                      <>
-                        &nbsp;through&nbsp;
-                        <select
-                          value={table.throughTable}
-                          onChange={(event) =>
-                            handleThroughTableChange(table.id, event)
-                          }
-                        >
-                          <option value="">Select Through Table</option>
-                          {tables
-                            .filter(
-                              (t) =>
-                                t.id !== table.id &&
-                                t.title !== table.relatedTable
-                            )
-                            .map((t) => (
-                              <option key={t.id} value={t.title}>
-                                {t.title}
-                              </option>
-                            ))}
-                        </select>
-                      </>
-                    )}
                     <br />
                     <button onClick={() => handleAddRelationship(table.id)}>
                       Add Relationship
