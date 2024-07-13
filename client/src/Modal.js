@@ -6,8 +6,8 @@ const Modal = ({ isOpen, onClose }) => {
   return (
     <div className="modal-container">
       <div className="modal-content">
-        <h1>API Generated Successfully!</h1>
-        <h3>Your database is downloading into an API.</h3>
+        <h1>Your API is Being Generated!</h1>
+        <h3>Enjoy Your Python Flask API App!</h3>
         <h2>Please Consider Donating Below to Support the Expansion of the App</h2>
         <div className="donate-buttons">
           <button>
@@ -30,16 +30,16 @@ const Modal = ({ isOpen, onClose }) => {
               {/* <img src="/cashapp-button.png" alt="cashapp"/> */}
             </a>
           </button>
-          <button>
+          {/* <button>
             <a
               href="https://venmo.com/u/Dylan-Carver-7"
               target="_blank"
               rel="noopener noreferrer"
             >
                 Venmo
-              {/* <img src="/venmo-button.png" alt="venmo"/> */}
+              <img src="/venmo-button.png" alt="venmo"/>
             </a>
-          </button>
+          </button> */}
         </div>
         <br />
         <br />
