@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "homepage": "https://DylanCarver9706.github.io/Wireframe-To-API-Converter",
+  "homepage": "https://DylanCarver9706.github.io",
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "latest",
