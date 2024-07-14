@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Draggable from "react-draggable";
 import Modal from "./Modal";
 import pluralize from "pluralize";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -138,8 +140,6 @@ const WireFrameMaker = () => {
     localStorage.setItem("zoomLevel", zoomLevel);
   }, [zoomLevel]);
 
-  // const initialTablesRef = useRef([]);
-
   const handleDrag = (id, draggableData) => {
     const { x, y } = draggableData;
     setTables((prevTables) =>
@@ -241,37 +241,44 @@ const WireFrameMaker = () => {
     setTables((prevTables) => [...prevTables, newTable]);
   };
 
-  const generateAPI = async () => {
-    let requestBody = {
-      app_name: databaseName,
-      tables: transformTables(tables),
-    };
-    fetch("http://dylancarver14.pythonanywhere.com/process", {
+const generateAPI = async () => {
+  let requestBody = {
+    app_name: databaseName,
+    tables: transformTables(tables),
+  };
+
+  try {
+    const apiResponse = await fetch("http://dylancarver14.pythonanywhere.com/process", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.style.display = "none";
-        a.href = url;
-        a.download = `${databaseName}.py`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => console.error("Error:", error));
+    });
+
+    if (!apiResponse.ok) {
+      throw new Error("Network response was not ok");
+    }
+    
     openModal();
-  };
+
+    const zip = new JSZip();
+    
+    const apiBlob = await apiResponse.blob();
+    zip.file(`${databaseName}.py`, apiBlob);
+    
+    const localResponse = await fetch("/requirements.txt");
+    const localBlob = await localResponse.blob();
+    zip.file("requirements.txt", localBlob);
+    
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    
+    saveAs(zipBlob, `${databaseName}.zip`);
+
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
   // const logTables = () => {
   //   const data = {
