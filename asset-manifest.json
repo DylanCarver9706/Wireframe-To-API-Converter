@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Wireframe-To-API-Converter/static/css/main.f94c6a37.css",
+    "main.js": "/Wireframe-To-API-Converter/static/js/main.1d4eb6c1.js",
+    "index.html": "/Wireframe-To-API-Converter/index.html",
+    "main.f94c6a37.css.map": "/Wireframe-To-API-Converter/static/css/main.f94c6a37.css.map",
+    "main.1d4eb6c1.js.map": "/Wireframe-To-API-Converter/static/js/main.1d4eb6c1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f94c6a37.css",
+    "static/js/main.1d4eb6c1.js"
+  ]
+}
