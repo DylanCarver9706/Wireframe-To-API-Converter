@@ -38,8 +38,7 @@ const HowToUse = () => {
           <strong>Create Your Tables:</strong> Create tables by clicking the "Add Tables" button. In the tables on the app, 
           you will see the "Table Title". In the input field, enter the name of the table in singular form. This means 
           instead of entering "Users", enter "User" instead. These will be the names of your endpoints when the API is created, 
-          but the app will pluralize them to follow RESTful conventions. <br /><br />NOTE: Join tables do not need to be created 
-          as they will be created during API generation.
+          but the app will pluralize them to follow RESTful conventions.
         </div>
         <div className="instruction">
           <strong>Add Attributes:</strong> The attributes
