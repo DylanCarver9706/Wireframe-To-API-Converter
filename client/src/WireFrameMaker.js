@@ -248,7 +248,7 @@ const generateAPI = async () => {
   };
 
   try {
-    const apiResponse = await fetch("http://dylancarver14.pythonanywhere.com/process", {
+    const apiResponse = await fetch("https://dylancarver14.pythonanywhere.com/process", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
