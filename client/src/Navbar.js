@@ -16,9 +16,9 @@ function Navbar() {
         style={{ display: "flex", justifyContent: "center" }}
       >
         <div style={{ display: "flex", alignItems: "center" }}>
-          <Link to="/" style={{ textDecoration: "none" }}>
+          <Link to="/Wireframe-To-API-Converter" style={{ textDecoration: "none" }}>
             <img
-              src="/database-icon.png"
+              src="https://i.imgur.com/M3MyHUs.png"
               alt="Logo"
               style={{ height: "50px", marginRight: "-20px" }}
             />
@@ -32,7 +32,7 @@ function Navbar() {
           >
             <Button
               component={Link}
-              to="/wireframe-maker"
+              to="Wireframe-To-API-Converter/wireframe-maker"
               sx={{
                 my: 2,
                 color: "white", // Set the text color to white
@@ -50,7 +50,7 @@ function Navbar() {
             </Button>
             <Button
               component={Link}
-              to="/how-to-use"
+              to="Wireframe-To-API-Converter/how-to-use"
               sx={{
                 my: 2,
                 color: "white",

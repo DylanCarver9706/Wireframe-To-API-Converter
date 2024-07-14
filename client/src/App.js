@@ -15,9 +15,9 @@ const App = () => {
       </>
 
       <Routes>
-        <Route path="/" exact element={<Home />} />
-        <Route path="/wireframe-maker" element={<WireFrameMaker />} />
-        <Route path="/how-to-use" element={<HowToUse />} />
+        <Route path="/Wireframe-To-API-Converter" exact element={<Home />} />
+        <Route path="Wireframe-To-API-Converter/wireframe-maker" element={<WireFrameMaker />} />
+        <Route path="Wireframe-To-API-Converter/how-to-use" element={<HowToUse />} />
       </Routes>
       </div>
     </div>
