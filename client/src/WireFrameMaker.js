@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Draggable from "react-draggable";
 import Modal from "./Modal";
 import pluralize from "pluralize";
-// import Xarrow from "react-xarrows";
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -301,7 +300,7 @@ const WireFrameMaker = () => {
     );
   };
 
-  const handleTypeChange = (tableId, attributeIndex, newType) => {
+  const handleAttributeTypeChange = (tableId, attributeIndex, newType) => {
     setTables((prevTables) =>
       prevTables.map((table) =>
         table.id === tableId
@@ -318,7 +317,7 @@ const WireFrameMaker = () => {
     );
   };
 
-  const handleTitleChange = (tableId, event) => {
+  const handleTableTitleChange = (tableId, event) => {
     const newTitle = capitalizeFirstLetter(event.target.value);
     setTables((prevTables) =>
       prevTables.map((table) =>
@@ -343,7 +342,7 @@ const WireFrameMaker = () => {
     );
   };
 
-  const handleRelatedTableChange = (tableId, event) => {
+  const handleRelatedTableSelect = (tableId, event) => {
     const tableTitle = event.target.value;
     setTables((prevTables) =>
       prevTables.map((table) =>
@@ -450,7 +449,7 @@ const WireFrameMaker = () => {
         &nbsp;
         <select
           value={attribute.type}
-          onChange={(e) => handleTypeChange(tableId, index, e.target.value)}
+          onChange={(e) => handleAttributeTypeChange(tableId, index, e.target.value)}
         >
           <option value="data type">Data Type</option>
           <option value="Integer">Integer</option>
@@ -594,7 +593,7 @@ const WireFrameMaker = () => {
                     type="text"
                     value={capitalizeFirstLetter(table.title)}
                     placeholder="Enter in Singular Form"
-                    onChange={(event) => handleTitleChange(table.id, event)}
+                    onChange={(event) => handleTableTitleChange(table.id, event)}
                   />
                 </h3>
                 <h3>Attributes</h3>
@@ -665,7 +664,7 @@ const WireFrameMaker = () => {
                     <select
                       value={table.relatedTable}
                       onChange={(event) =>
-                        handleRelatedTableChange(table.id, event)
+                        handleRelatedTableSelect(table.id, event)
                       }
                     >
                       <option value="">Select Related Table</option>
@@ -692,16 +691,6 @@ const WireFrameMaker = () => {
               </div>
             </Draggable>
           ))}
-          {/* connects arrow to the html ids of the tables with 'start' and 'end'. Tables already have an id set as their table.id. Just needs logic to connect them based on relationship */}
-          {/* <Xarrow
-            start="1"
-            end="2"
-            path="grid"
-            animateDrawing
-            dashness
-            tailShape={"heart"}
-            endAnchor="right"
-          /> */}
         </div>
       </div>
       <div className="zoom-buttons">
