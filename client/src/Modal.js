@@ -17,7 +17,6 @@ const Modal = ({ isOpen, onClose }) => {
               rel="noopener noreferrer"
             >
                 PayPal
-              {/* <img src="/paypal-button.png" alt="paypal"/> */}
             </a>
           </button>
           <button>
@@ -27,19 +26,8 @@ const Modal = ({ isOpen, onClose }) => {
               rel="noopener noreferrer"
             >
                 CashApp
-              {/* <img src="/cashapp-button.png" alt="cashapp"/> */}
             </a>
           </button>
-          {/* <button>
-            <a
-              href="https://venmo.com/u/Dylan-Carver-7"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-                Venmo
-              <img src="/venmo-button.png" alt="venmo"/>
-            </a>
-          </button> */}
         </div>
         <br />
         <br />
