@@ -241,44 +241,48 @@ const WireFrameMaker = () => {
     setTables((prevTables) => [...prevTables, newTable]);
   };
 
-const generateAPI = async () => {
-  let requestBody = {
-    app_name: databaseName,
-    tables: transformTables(tables),
-  };
+  const generateAPI = async () => {
+    let requestBody = {
+      app_name: databaseName,
+      tables: transformTables(tables),
+    };
 
-  try {
-    const apiResponse = await fetch("https://dylancarver14.pythonanywhere.com/process", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
+    try {
+      const apiResponse = await fetch(
+        "https://dylancarver14.pythonanywhere.com/process",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
-    if (!apiResponse.ok) {
-      throw new Error("Network response was not ok");
+      if (!apiResponse.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      openModal();
+
+      const zip = new JSZip();
+
+      const apiBlob = await apiResponse.blob();
+      zip.file(`${databaseName}.py`, apiBlob);
+
+      // Add the requirements.txt file content directly
+      const requirementsContent = 
+      `Flask==3.0.3\nFlask-RESTful==0.3.10\nFlask-SQLAlchemy==3.1.1\ninflect==7.2.1`
+      
+      zip.file("requirements.txt", requirementsContent);
+
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+
+      saveAs(zipBlob, `${databaseName}.zip`);
+    } catch (error) {
+      console.error("Error:", error);
     }
-    
-    openModal();
-
-    const zip = new JSZip();
-    
-    const apiBlob = await apiResponse.blob();
-    zip.file(`${databaseName}.py`, apiBlob);
-    
-    const localResponse = await fetch("/requirements.txt");
-    const localBlob = await localResponse.blob();
-    zip.file("requirements.txt", localBlob);
-    
-    const zipBlob = await zip.generateAsync({ type: "blob" });
-    
-    saveAs(zipBlob, `${databaseName}.zip`);
-
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+  };
 
   // const logTables = () => {
   //   const data = {
@@ -287,7 +291,7 @@ const generateAPI = async () => {
   //   };
 
   //   console.log(JSON.stringify(data, null, 2));
-    // console.log(JSON.stringify(tables, null, 2));
+  // console.log(JSON.stringify(tables, null, 2));
   // };
 
   const handleAttributeChange = (tableId, attributeIndex, newValue) => {
@@ -456,7 +460,9 @@ const generateAPI = async () => {
         &nbsp;
         <select
           value={attribute.type}
-          onChange={(e) => handleAttributeTypeChange(tableId, index, e.target.value)}
+          onChange={(e) =>
+            handleAttributeTypeChange(tableId, index, e.target.value)
+          }
         >
           <option value="data type">Data Type</option>
           <option value="Integer">Integer</option>
@@ -600,7 +606,9 @@ const generateAPI = async () => {
                     type="text"
                     value={capitalizeFirstLetter(table.title)}
                     placeholder="Enter in Singular Form"
-                    onChange={(event) => handleTableTitleChange(table.id, event)}
+                    onChange={(event) =>
+                      handleTableTitleChange(table.id, event)
+                    }
                   />
                 </h3>
                 <h3>Attributes</h3>
