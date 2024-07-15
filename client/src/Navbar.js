@@ -50,7 +50,7 @@ function Navbar() {
             </Button>
             <Button
               component={Link}
-              to="Wireframe-To-API-Converter/how-to-use"
+              to="/how-to-use"
               sx={{
                 my: 2,
                 color: "white",
