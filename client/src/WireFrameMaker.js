@@ -248,6 +248,7 @@ const WireFrameMaker = () => {
     };
 
     try {
+      openModal();
       const apiResponse = await fetch(
         "https://dylancarver14.pythonanywhere.com/process",
         {
@@ -262,8 +263,6 @@ const WireFrameMaker = () => {
       if (!apiResponse.ok) {
         throw new Error("Network response was not ok");
       }
-
-      openModal();
 
       const zip = new JSZip();
 
