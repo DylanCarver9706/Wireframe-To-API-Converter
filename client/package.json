@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "homepage": "wireframe-to-api-converter.com",
+  "homepage": "https://wireframe-to-api-converter.com",
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "latest",
