@@ -270,7 +270,7 @@
 }
 
 .close-button {
-  background-color: #c52222;;
+  background-color: #007bff;;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -286,7 +286,11 @@
 }
 
 .close-button:hover {
-  background-color: #ff0000;;
+  background-color: #0056b3;;
+}
+
+.error-title {
+  color: red;
 }
 
 .donate-buttons img {
