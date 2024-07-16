@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Draggable from "react-draggable";
-import Modal from "./Modal";
+import GenerateModal from "./GenerateModal";
+import ErrorModal from "./ErrorModal";
 import pluralize from "pluralize";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -57,7 +58,9 @@ const transformTables = (input) => {
 
 const WireFrameMaker = () => {
   const [databaseName, setDatabaseName] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [error, setError] = useState("");
   const [zoomLevel, setZoomLevel] = useState(1);
   const [tables, setTables] = useState([
     {
@@ -248,7 +251,10 @@ const WireFrameMaker = () => {
     };
 
     try {
-      openModal();
+      if (validateBeforeGenerate() === false) {
+        return;
+      }
+      openGenerateModal();
       const apiResponse = await fetch(
         "https://dylancarver14.pythonanywhere.com/process",
         {
@@ -270,9 +276,8 @@ const WireFrameMaker = () => {
       zip.file(`${databaseName}.py`, apiBlob);
 
       // Add the requirements.txt file content directly
-      const requirementsContent = 
-      `Flask==3.0.3\nFlask-RESTful==0.3.10\nFlask-SQLAlchemy==3.1.1\ninflect==7.2.1`
-      
+      const requirementsContent = `Flask==3.0.3\nFlask-RESTful==0.3.10\nFlask-SQLAlchemy==3.1.1\ninflect==7.2.1`;
+
       zip.file("requirements.txt", requirementsContent);
 
       const zipBlob = await zip.generateAsync({ type: "blob" });
@@ -345,7 +350,6 @@ const WireFrameMaker = () => {
               ...table,
               relationshipType: type,
               relatedTable: "",
-              throughTable: "",
             }
           : table
       )
@@ -361,7 +365,19 @@ const WireFrameMaker = () => {
     );
   };
 
-  const handleAddAttribute = (tableId) => {
+  const handleAddAttribute = (tableId, newAttribute, selectedType) => {
+    if (selectedType === "Data Type") {
+      openErrorModal(
+        "Please select a valid data type before adding an attribute"
+      );
+      return;
+    }
+
+    if (newAttribute.trim() === "") {
+      openErrorModal("Attribute name cannot be empty");
+      return;
+    }
+
     setTables((prevTables) =>
       prevTables.map((table) =>
         table.id === tableId
@@ -370,15 +386,10 @@ const WireFrameMaker = () => {
               attributes: [
                 ...table.attributes,
                 {
-                  name:
-                    table.newAttribute && table.newAttribute.trim() !== "" // Check if newAttribute exists and is not an empty string
-                      ? table.newAttribute.trim()
-                      : "",
-                  type: table.selectedType, // Check if selectedType exists before converting to lowercase
+                  name: newAttribute.trim(),
+                  type: selectedType,
                 },
               ],
-              newAttribute: "",
-              selectedType: "Data Type",
             }
           : table
       )
@@ -389,6 +400,9 @@ const WireFrameMaker = () => {
     setTables((prevTables) =>
       prevTables.map((table) => {
         if (table.id !== tableId) return table;
+        if (table.relatedTable.trim() === "") {
+          openErrorModal("Please select a related table before adding a relationship");
+        }
         if (
           table.relatedTable.trim() !== "" &&
           table.relationshipType.trim() !== ""
@@ -496,12 +510,22 @@ const WireFrameMaker = () => {
     });
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openGenerateModal = () => {
+    setIsGenerateModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeGenerateModal = () => {
+    setIsGenerateModalOpen(false);
+  };
+
+  const openErrorModal = (errorMessage) => {
+    setError(errorMessage);
+    setIsErrorModalOpen(true);
+  };
+
+  const closeErrorModal = () => {
+    setIsErrorModalOpen(false);
+    setError("");
   };
 
   const handleDeleteAttribute = (tableId, attributeIndex) => {
@@ -559,9 +583,54 @@ const WireFrameMaker = () => {
     }
   };
 
+  const validateBeforeGenerate = () => {
+    
+    // Check if database name is set
+    if (databaseName === "") {
+      // setError("Cannot generate without a database name set!");
+      openErrorModal("Cannot generate without a database name set!");
+      return false;
+    }
+    
+    // Check if all table attribute names and datatypes are valid
+    for (let i = 0; i < tables.length; i++) {
+      let table = tables[i];
+      if (table.title === "") {
+        openErrorModal(
+          "Cannot generate without all table names set!"
+        );
+        return false;
+      }
+      for (let j = 0; j < table.attributes.length; j++) {
+        if (table.attributes.length > 0) {
+          if (table.attributes[j].name === "") {
+            openErrorModal(
+              "Cannot generate without all attribute names set!"
+            );
+            return false;
+          }
+          if (table.attributes[j].type === "Data Type") {
+            openErrorModal(
+              "Cannot generate without all attribute types set!"
+            );
+            return false;
+          }
+        }
+      }
+    }
+  };
+
   return (
     <div>
-      <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <GenerateModal
+        isOpen={isGenerateModalOpen}
+        onClose={closeGenerateModal}
+      />
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={closeErrorModal}
+        errorMessage={error}
+      />
       <div className="header">
         <div className="input-container">
           <input
@@ -646,7 +715,15 @@ const WireFrameMaker = () => {
                   <option value="String(100)">String</option>
                 </select>
                 &nbsp;
-                <button onClick={() => handleAddAttribute(table.id)}>
+                <button
+                  onClick={() =>
+                    handleAddAttribute(
+                      table.id,
+                      table.newAttribute,
+                      table.selectedType
+                    )
+                  }
+                >
                   Add Attribute
                 </button>
                 <h3>Relationships</h3>
