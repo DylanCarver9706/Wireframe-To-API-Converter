@@ -346,7 +346,7 @@
 }
 
 .zoom-buttons button.zoom-out::before {
-  content: "—";
+  content: "━";
   font-size: 30px;
 }
 
