@@ -17,9 +17,10 @@ const HowToUse = () => {
           <p>
             It is intended to provide RESTful API endpoints with basic CRUD
             methods tailored to your app to get you started faster. The
-            generated API structures are made from Python Flask and can be used
-            as a starting point for your backend development. Follow the steps
-            below to effectively use the application
+            generated API structures are made from Python Flask with a built-in
+            database using Flask-SQLAlchemy. It can be used as a great starting
+            point for your backend development on your future app. Follow the
+            steps below to effectively use the application
           </p>
         </div>
         <br />
@@ -73,12 +74,9 @@ const HowToUse = () => {
         <div className="instruction">
           <strong>Generate API:</strong> Once you've defined the attributes and
           relationships of your database, click on the "Generate API" button in
-          the header bar. The application will create a Flask app based on the
-          wireframe and download a .py file you can run
-        </div>
-        <div className="instruction">
-          <strong>Run the Script:</strong> Now you can run the Python file using
-          Python 3.0+ to create your project with endpoints ready to go!
+          the header bar. The application will then download a zip file
+          containing your Flask app based on the wireframe, complete with a
+          built-in database mirroring the one you've designed.
         </div>
       </div>
       <br />
@@ -117,13 +115,13 @@ const HowToUse = () => {
           placed your downloaded folder
         </div>
         <div className="instruction">
-          <strong>Run:</strong> Run "python file-name.py" to run the custom Flask
-          app built just for your database
-          
+          <strong>Run:</strong> Run "python *file name*.py" to run the custom
+          Flask app built just for your database
         </div>
         <div className="instruction">
           <strong>Success:</strong> The API will start and a port will be open
-          to allow you to access the endpoints associated to your database tables from http://localhost/5000
+          to allow you to access the endpoints associated to your database
+          tables from http://localhost/5000
         </div>
         <div className="instruction">
           <strong>Test Endponts:</strong> Test your endpoints. I recommend&nbsp;
