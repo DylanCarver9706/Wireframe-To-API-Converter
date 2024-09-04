@@ -18,7 +18,7 @@ A web application that allows users to build relational database wireframes visu
 
 ## Usage
 
-- Visit the [How To](https://wireframe-to-api-converter.com/how-to-use) section of the website to view the Wireframe to API Converter instructions.
+- Visit [Wireframe to API Converter](https://wireframe-to-api-converter.com) and navigate to "HOW TO USE" to view the Wireframe to API Converter instructions.
 
 ## Contact
 
